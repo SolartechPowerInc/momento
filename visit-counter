@@ -1,4 +1,4 @@
-import { CacheClient, Configurations } from "@momento/sdk-web";
+import { CacheClient, Configurations } from "@gomomento/sdk-web";
 
 const cacheClient = new CacheClient({
   configuration: Configurations.Browser.v1(),
