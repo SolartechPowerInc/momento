@@ -1,0 +1,31 @@
+import { CacheClient, Configurations } from "@momento/sdk-web";
+
+const cacheClient = new CacheClient({
+  configuration: Configurations.Browser.v1(),
+  authToken: "YOUR_MOMENTO_AUTH_TOKEN", // Store this securely
+  defaultTtlSeconds: 3600,
+});
+
+export default {
+  async fetch(request) {
+    const responseHeaders = {
+      "Access-Control-Allow-Origin": "https://map-solartech-inc.pages.dev",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "*"
+    };
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: responseHeaders
+      });
+    }
+
+    const result = await cacheClient.increment("visit-counter", "visits", 1);
+    const currentCount = result.value();
+
+    return new Response(currentCount.toString(), {
+      headers: responseHeaders
+    });
+  }
+};
